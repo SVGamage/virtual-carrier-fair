@@ -1,0 +1,30 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model UserAuth {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  email        String   @unique
+  full_name    String
+  username     String
+  password     String
+  user_type    UserType @relation(fields: [user_type_id], references: [id])
+  user_type_id String   @db.ObjectId
+  created_at   DateTime @default(now())
+
+  @@map("user_auth")
+}
+
+model UserType {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  display_name String
+  UserAuth     UserAuth[]
+
+  @@map("user_type")
+}
