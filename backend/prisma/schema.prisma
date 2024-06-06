@@ -7,29 +7,24 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum UserType {
+  CANDIDATE
+  EMPLOYER
+}
+
 model User {
   id              String            @id @default(auto()) @map("_id") @db.ObjectId
   email           String            @unique
-  full_name       String
+  fullname        String
   username        String
   password        String
-  user_type       UserType          @relation(fields: [user_type_id], references: [id])
-  user_type_id    String            @db.ObjectId
+  user_type       UserType
   created_at      DateTime          @default(now())
   CandidateInfo   CandidateInfo[]
   UserSocialMedia UserSocialMedia[]
   CompanyInfo     CompanyInfo[]
 
-  @@map("user_auth")
-}
-
-model UserType {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  display_name String
-  users        User[]
-
-  @@map("user_type")
+  @@map("user")
 }
 
 model CandidateInfo {
