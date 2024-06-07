@@ -1,5 +1,10 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { UserSignUpData } from "../utils/auth.types";
+import {
+  getUserFilter,
+  getUserParams,
+  paramsType,
+  UserSignUpData,
+} from "../utils/auth.types";
 import { createConnection } from "../configs/prisma-mongodb-connector";
 
 const prisma = new PrismaClient();
@@ -29,4 +34,36 @@ export const isEmailExists = async (email: string) => {
     },
   });
   return user !== null;
+};
+
+export const getUser = async (filter: getUserFilter) => {
+  const prisma = await createConnection();
+  let params: getUserParams = {};
+  if (filter.id !== undefined) {
+    params.id = filter.id;
+  }
+  if (filter.email !== undefined) {
+    params.email = filter.email;
+  }
+  if (filter.username !== undefined) {
+    params.username = filter.username;
+  }
+  return prisma.user.findFirst({
+    where: params,
+  });
+};
+
+export const updateTempOTP = async (email: string, tempOTP: number | null) => {
+  const prisma = await createConnection();
+  let params: paramsType = {};
+  if (tempOTP === null) {
+    params.verified = true;
+  }
+  params.tempOTP = tempOTP;
+  return prisma.user.update({
+    where: {
+      email,
+    },
+    data: params,
+  });
 };
