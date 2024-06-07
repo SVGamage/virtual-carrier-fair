@@ -35,3 +35,8 @@ export type paramsType = {
   verified?: boolean;
   tempOTP?: number | null;
 };
+
+export type loginCredentials = {
+  email: string;
+  password: string;
+};
