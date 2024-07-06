@@ -27,14 +27,14 @@ export default function Home() {
             divClasses="flex justify-center  items-center mx-5"
             title="Become an Employer"
             description="Register to become an employer and post job openings for students to apply."
-            buttonLink="/"
+            user_type="employer"
           />
           <LandingCard
             cardClasses="bg-slate-300  w-full md:w-2/3"
             divClasses="flex justify-center items-center mb-5 mx-5"
             title="Become a Candidate"
             description="Register to become a candidate and apply for job openings posted by employers."
-            buttonLink="/"
+            user_type="employee"
           />
         </div>
       </div>

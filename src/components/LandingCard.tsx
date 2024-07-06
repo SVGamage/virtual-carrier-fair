@@ -2,25 +2,25 @@ import React from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
+
+import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 type CardProps = {
   divClasses: string;
   cardClasses: string;
   title: string;
   description: string;
-  buttonLink: string;
+  user_type: string;
 };
 export default function LandingCard({
   cardClasses,
   divClasses,
   title,
   description,
-  buttonLink,
+  user_type,
 }: CardProps) {
   return (
     <div className={divClasses}>
@@ -31,12 +31,12 @@ export default function LandingCard({
           </CardHeader>
           <p className="px-1 text-sm md:text-md mb-2">{description}</p>
           <CardFooter className="p-0 px-1">
-            <Link
+            <RegisterLink
               className="bg-white rounded-md py-1 px-2 text-blue-600 font-bold"
-              href={buttonLink}
+              postLoginRedirectURL={`http:localhost:3000/${user_type}`}
             >
               Register
-            </Link>
+            </RegisterLink>
           </CardFooter>
         </CardContent>
       </Card>
