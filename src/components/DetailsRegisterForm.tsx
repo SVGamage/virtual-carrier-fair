@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,6 +16,9 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { isUsernameExists, registerUserDetails } from "@/action/actions";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   firstname: z.string().min(2, {
@@ -25,23 +27,35 @@ const formSchema = z.object({
   lastname: z.string().min(2, {
     message: "lastname must be at least 2 characters.",
   }),
-  username: z.string().min(2, {
-    message: "username must be at least 2 characters.",
-  }),
-  isEmployer: z.boolean().optional(),
+  username: z
+    .string()
+    .min(2, {
+      message: "username must be at least 2 characters.",
+    })
+    .refine(
+      async (value) => {
+        return await isUsernameExists(value);
+      },
+      { message: "username is already exists" },
+    ),
+  isEmployer: z.boolean(),
 });
 type Props = {
   user_type: string;
 };
+export type registerUserFormType = z.infer<typeof formSchema>;
 export default function DetailsRegisterForm({ user_type }: Props) {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const [isLoading, setIsLoading] = useState(false);
+  const form = useForm<registerUserFormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       isEmployer: user_type === "employer" && true,
     },
   });
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    await registerUserDetails(data);
+    setIsLoading(false);
   };
   return (
     <Card className=" p-10 md:px-10 md:py-6 md:w-1/3">
@@ -106,8 +120,19 @@ export default function DetailsRegisterForm({ user_type }: Props) {
               </FormItem>
             )}
           />
-          <Button className="bg-blue-600 w-full" type="submit">
-            Submit
+          <Button
+            className="bg-blue-600 hover:bg-black w-full"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <p>Loading...</p>
+              </>
+            ) : (
+              <p>Submit</p>
+            )}
           </Button>
         </form>
       </Form>
