@@ -19,6 +19,7 @@ import { Card } from "@/components/ui/card";
 import { isUsernameExists, registerUserDetails } from "@/action/actions";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
   firstname: z.string().min(2, {
@@ -56,6 +57,7 @@ export default function DetailsRegisterForm({ user_type }: Props) {
     setIsLoading(true);
     await registerUserDetails(data);
     setIsLoading(false);
+    redirect("/");
   };
   return (
     <Card className=" p-10 md:px-10 md:py-6 md:w-1/3">
