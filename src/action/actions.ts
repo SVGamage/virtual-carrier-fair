@@ -4,6 +4,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { $Enums } from "@prisma/client";
 import UserType = $Enums.UserType;
 import prisma from "@/lib/db";
+import { redirect } from "next/navigation";
 
 export const registerUserDetails = async (data: registerUserFormType) => {
   try {
@@ -31,3 +32,7 @@ export const isUsernameExists = async (username: string) => {
   });
   return !user;
 };
+
+export async function customNavigate(path: string) {
+  redirect(path);
+}
